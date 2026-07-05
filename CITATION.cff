@@ -5,7 +5,15 @@ authors:
   - family-names: Swain
     given-names: Vishal Kumar
     affiliation: "National Institute of Technology Warangal"
-  # NOTE: add remaining co-authors here to match the final paper author list
+    email: vk25csr1p07@student.nitw.ac.in
+  - family-names: Godboley
+    given-names: Sangharatna
+    affiliation: "National Institute of Technology Warangal"
+    email: sanghu@nitw.ac.in
+  - family-names: Krishna
+    given-names: Pisipati Radha
+    affiliation: "National Institute of Technology Warangal"
+    email: prkrishna@nitw.ac.in
 date-released: 2026-07-05
 license: MIT
 repository-code: "https://github.com/VishalKumarSwain/kseresnet-v2-artifact"
@@ -15,6 +23,10 @@ preferred-citation:
   authors:
     - family-names: Swain
       given-names: Vishal Kumar
+    - family-names: Godboley
+      given-names: Sangharatna
+    - family-names: Krishna
+      given-names: Pisipati Radha
   journal: "Empirical Software Engineering"
   status: submitted
   year: 2026
