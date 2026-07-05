@@ -235,10 +235,11 @@ ranking metric (APFD). Section~\ref{sec:rq1} shows this mismatch produces a
 large, measurable effect in this setting, not merely a theoretical concern.
 
 \subsection{Architecture Background}
-The baseline model's SE-attention blocks follow the Squeeze-and-Excitation
-design of \citet{hu2018squeeze}. The Transformer variant used in one of our
-robustness checks (Section~\ref{sec:rq3-robustness}) follows the encoder
-architecture of \citet{vaswani2017attention}.
+The baseline model's backbone follows the residual-connection design of
+\citet{he2016deep}, and its SE-attention blocks follow the
+Squeeze-and-Excitation design of \citet{hu2018squeeze}. The Transformer
+variant used in one of our robustness checks (Section~\ref{sec:rq3-robustness})
+follows the encoder architecture of \citet{vaswani2017attention}.
 
 \begin{table}[t]
 \caption{Positioning against prior SDC regression-testing work.}
@@ -352,11 +353,13 @@ subset, and we report it as a residual limitation rather than a resolved
 one (Section~\ref{sec:threats}). We split the full 36{,}006-test corpus
 80/20 (28{,}804 / 7{,}202 tests) with a fixed seed, and used the 20\%
 held-out portion \emph{exclusively} for evaluating any model we trained
-ourselves, to avoid training/evaluation leakage.
+ourselves, to avoid training/evaluation leakage
+\citep{kaufman2012leakage}.
 
 \subsection{Evaluation Harness}
 \label{sec:harness}
-The organizers' evaluation infrastructure is Docker/PostgreSQL/MongoDB-based
+The organizers' evaluation infrastructure is Docker-based
+\citep{boettiger2015introduction}, combined with PostgreSQL and MongoDB,
 and not fully self-containable. We re-implemented the evaluation protocol
 independently: identical APFD, cost-aware APFD ($\mathrm{APFD}_C$),
 time-to-first-fault, and time-to-last-fault formulas
@@ -445,16 +448,16 @@ Section~\ref{sec:framework}.
 normalized tensor is permuted to $[\text{batch},8,200]$ and passed through
 a $1{\times}5$ Conv1D expanding to 32 channels, then three sequential
 residual blocks. Each residual block applies two $32{\to}32$, kernel-5
-convolutions (each followed by batch normalization), a Squeeze-and-Excitation
-attention gate \citep{hu2018squeeze} that reweights the 32 channels by a
-learned, globally-pooled gate, an additive residual connection, and a final
-ReLU. A kernel-2 max-pool halves the sequence length after the first and
-second residual blocks only (200$\to$100$\to$50; the third block is followed
-directly by flattening). The flattened $32\times50=1{,}600$-dimensional
-representation is passed through a fully connected head
-(Linear(1600$\to$64)$\to$ReLU$\to$Dropout(0.3)$\to$Linear(64$\to$1)) to
-produce a single scalar score, with higher scores indicating higher
-predicted failure risk.
+convolutions (each followed by batch normalization \citep{ioffe2015batch}),
+a Squeeze-and-Excitation attention gate \citep{hu2018squeeze} that
+reweights the 32 channels by a learned, globally-pooled gate, an additive
+residual connection, and a final ReLU. A kernel-2 max-pool halves the
+sequence length after the first and second residual blocks only
+(200$\to$100$\to$50; the third block is followed directly by flattening).
+The flattened $32\times50=1{,}600$-dimensional representation is passed
+through a fully connected head (Linear(1600$\to$64)$\to$ReLU$\to$Dropout(0.3)
+\citep{srivastava2014dropout}$\to$Linear(64$\to$1)) to produce a single
+scalar score, with higher scores indicating higher predicted failure risk.
 
 \textbf{Training (offline, Figure~\ref{fig:framework} Phase 2).} The network
 is first pretrained with a pointwise objective, then fine-tuned with a
@@ -465,7 +468,8 @@ pairwise ranking loss over sampled fail/pass pairs from the training split:
 where $s_i,s_j$ are model scores for a failing and a passing test,
 respectively. The ranking fine-tune warm-starts from the pointwise
 checkpoint and trains for 15 epochs over sampled fail/pass pairs
-(20{,}000 pairs/epoch); Section~\ref{sec:rq3-robustness} shows this epoch
+(20{,}000 pairs/epoch) using the Adam optimizer \citep{kingma2014adam};
+Section~\ref{sec:rq3-robustness} shows this epoch
 count is a genuine optimum, not an arbitrary cutoff. We did not train a
 cost-aware variant: the competition's gRPC interface exposes only road
 geometry and a binary pass/fail label to the tool at initialization time,
@@ -474,10 +478,14 @@ impossible under this interface -- an actionable finding for future
 competition editions (Section~\ref{sec:discussion}).
 
 \subsection{Statistical Analysis}
-For every paired comparison we report the mean difference, the Wilcoxon
-signed-rank test \citep{wilcoxon1992individual}, and the Vargha--Delaney
-$\hat{A}_{12}$ effect size \citep{vargha2000critique}. Where multiple tests
-support a single research question, we apply a Holm--Bonferroni correction
+Following established guidance for statistical testing of empirical
+software engineering results \citep{arcuri2011practical}, for every paired
+comparison we report the mean difference, the Wilcoxon signed-rank test
+\citep{wilcoxon1992individual}, and the Vargha--Delaney $\hat{A}_{12}$
+effect size \citep{vargha2000critique}, whose conventional magnitude
+thresholds we interpret alongside standard effect-size guidance
+\citep{cohen2013statistical}. Where multiple tests support a single
+research question, we apply a Holm--Bonferroni correction
 \citep{holm1979simple} within that family.
 
 \section{Results}
@@ -542,7 +550,8 @@ fixed improves it by only 0.028 with weak features and, with the richer
 feature set already in place, is not merely non-additive but mildly
 \emph{harmful} ($\hat{A}_{12}=0.327$, $p=0.022$). Channel-importance analysis
 (zeroing each of the 8 channels and measuring the resulting drop in
-fail/pass separation AUC) confirms the mechanism: the two geometry channels
+fail/pass separation AUC \citep{fawcett2006introduction}) confirms the
+mechanism: the two geometry channels
 absent from the baseline -- heading angle change (AUC drop 0.340) and
 curvature (0.272) -- account for the large majority of the model's
 discriminative power, while the four original kinematic channels each
@@ -676,7 +685,7 @@ randomly drawn subject worse than the intermediate model. We report this
 as a real but modest finding: it is not, on its own, grounds to prefer the
 intermediate model in practice, but it does mean the aggregate RQ3
 improvement should not be read as a uniform within-generator improvement.
-This is a Simpson's-paradox-like effect: the
+This is a Simpson's-paradox-like effect \citep{simpson1951interpretation}: the
 aggregate, mixed-generator comparison shows improvement because it also
 rewards correctly ordering \emph{across} generators with different base
 failure rates, which the ranking loss appears to partly learn, but this
@@ -786,7 +795,9 @@ subgroup.
 \section{Threats to Validity}
 \label{sec:threats}
 We organize this section using the construct/internal/external/conclusion
-validity framework of \citet{wohlin2012experimentation}.
+validity framework of \citet{wohlin2012experimentation}, consistent with
+current empirical software engineering reporting standards
+\citep{ralph2020empirical}.
 \textbf{Construct.} APFD is a standard but imperfect proxy for
 fault-detection cost-effectiveness; we also report $\mathrm{APFD}_C$ where
 possible. Our reconstructed corpus contains 3{,}426 more FreneticV tests
@@ -807,7 +818,12 @@ A more consequential internal threat is \emph{survivorship bias} in the
 ITEP4SDC and EagleSemble comparisons: both succeed on only 31\% of trials,
 and their successes are concentrated at smaller, easier subject sizes
 (Section~\ref{sec:rq3}), so their reported APFD is not computed over a
-sample comparable to the fully reliable tools. We mitigate this by
+sample comparable to the fully reliable tools. This kind of
+size-/difficulty-dependent failure is consistent with broader findings on
+non-deterministic, environment-sensitive test behavior
+\citep{luo2014empirical} and on the gap between reported and
+production-grade reliability of deployed ML components
+\citep{sculley2015hidden}. We mitigate this by
 restricting our significance claims to RTE4SDC, but the numeric comparisons
 against ITEP4SDC and EagleSemble elsewhere in this paper (e.g.,
 Table~\ref{tab:main}) should be read as descriptive, not as validated
