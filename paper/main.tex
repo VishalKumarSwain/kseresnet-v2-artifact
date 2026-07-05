@@ -11,9 +11,23 @@
 \title{When Accuracy Misleads: Diagnosing and Repairing Ranking Failures in
 ML-Based Test Prioritization for Self-Driving Cars}
 
-\author{[Author names withheld for drafting] }
+\author{Vishal Kumar Swain \and Sangharatna Godboley \and Pisipati Radha Krishna}
 
-\institute{[Affiliations withheld for drafting]}
+\institute{Vishal Kumar Swain \at
+Department of Computer Science \& Engineering, National Institute of
+Technology, Warangal, Telangana, India \\
+\email{vk25csr1p07@student.nitw.ac.in}
+\and
+Sangharatna Godboley \at
+Department of Computer Science \& Engineering, National Institute of
+Technology, Warangal, Telangana, India \\
+\email{sanghu@nitw.ac.in}
+\and
+Pisipati Radha Krishna \at
+Department of Computer Science \& Engineering, National Institute of
+Technology, Warangal, Telangana, India \\
+\email{prkrishna@nitw.ac.in}
+}
 
 \date{Received: date / Accepted: date}
 
@@ -826,21 +840,9 @@ extended to expose simulation cost, pursue genuinely cost-aware training.
 \textbf{Data availability.} The SensoDat corpus is publicly available
 \citep{birchler2024sensodat}. All code, trained model checkpoints, dataset
 splits, and the independent evaluation harness used in this paper are
-released at [repository URL to be added].
+released at \url{https://github.com/VishalKumarSwain/kseresnet-v2-artifact}
+(archived on Zenodo: [DOI to be added once the archival release is cut]).
 \label{sec:availability}
-\textbf{Use of AI tools.} An AI coding assistant (Claude Code) was used to
-implement the evaluation harness, training scripts, and statistical
-analysis described in this paper, under direct author supervision.
-Verification beyond author review consisted of: (i) validating the
-evaluation harness itself against the organizers' independently published
-results (Section~\ref{sec:harness}) before trusting it for any new
-experiment; (ii) computing Wilcoxon signed-rank statistics via SciPy's
-standard, independently maintained implementation rather than custom code;
-and (iii) manually spot-checking the Vargha--Delaney $\hat{A}_{12}$
-effect-size outputs against hand-counted win/loss/tie tallies on a sample
-of comparisons. We did not construct a fully independent second
-implementation of the statistical pipeline, which we note as a limitation
-of our verification process rather than omit.
 
 \bibliographystyle{spbasic}
 \bibliography{references}
