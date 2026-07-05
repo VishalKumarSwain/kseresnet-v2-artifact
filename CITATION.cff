@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the paper below."
+title: "KSERESNET-V2: Diagnosing and Repairing Ranking Failures in ML-Based SDC Test Prioritization"
+authors:
+  - family-names: Swain
+    given-names: Vishal Kumar
+    affiliation: "National Institute of Technology Warangal"
+  # NOTE: add remaining co-authors here to match the final paper author list
+date-released: 2026-07-05
+license: MIT
+repository-code: "https://github.com/VishalKumarSwain/kseresnet-v2-artifact"
+preferred-citation:
+  type: article
+  title: "When Accuracy Misleads: Diagnosing and Repairing Ranking Failures in ML-Based Test Prioritization for Self-Driving Cars"
+  authors:
+    - family-names: Swain
+      given-names: Vishal Kumar
+  journal: "Empirical Software Engineering"
+  status: submitted
+  year: 2026

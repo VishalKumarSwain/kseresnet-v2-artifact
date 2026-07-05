@@ -1,0 +1,4 @@
+generator,comparison,mean_diff,A12,wilcoxon_p
+ambiegen,Proposed vs pointwise-features-only,-0.0038,0.353,3.09e-03
+frenetic,Proposed vs pointwise-features-only,+0.0013,0.507,2.77e-01
+freneticV,Proposed vs pointwise-features-only,-0.0078,0.253,4.02e-07

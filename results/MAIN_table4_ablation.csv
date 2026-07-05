@@ -1,0 +1,5 @@
+configuration,apfd_mean,apfd_std
+"Baseline features, no adaptation",0.6161,0.0614
+Baseline features + fine-tuned,0.6444,0.0741
+"Proposed features, no adaptation",0.7586,0.0538
+Proposed features + pointwise fine-tune,0.7578,0.0547

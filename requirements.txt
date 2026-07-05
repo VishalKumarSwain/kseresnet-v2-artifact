@@ -1,0 +1,6 @@
+torch>=2.0
+numpy
+scipy
+grpcio
+grpcio-tools
+matplotlib

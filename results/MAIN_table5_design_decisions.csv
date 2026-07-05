@@ -1,0 +1,5 @@
+design_choice,result,decision
+Online per-subject ranking-loss fine-tuning (vs. pointwise),"No effect (+0.001 APFD, p=0.98)",Not adopted -- online adaptation is data-starved (one small subject)
+More training epochs (40 vs 15) for offline ranking loss,"Slightly worse (-0.0016 APFD, p=0.0003)",Not adopted -- mild overfitting; 15 epochs is the practical optimum
+Generator-stratified fail/pass pair sampling,"No effect (-0.0004 APFD, p=0.11)",Not adopted -- did not fix the per-generator inconsistency
+Transformer encoder backbone (same features/recipe),"Substantially worse (-0.052 APFD, p<1e-25)",Not adopted -- underperforms ResNet under our data/compute budget

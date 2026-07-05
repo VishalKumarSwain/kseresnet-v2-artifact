@@ -1,0 +1,4 @@
+comparison,mean_diff,A12,wilcoxon_p
+Proposed vs Baseline (main contribution),+0.1691,0.997,7.64e-28
+RoadFury vs Proposed (remaining SOTA gap),+0.0090,0.750,4.24e-13
+Proposed vs RTE4SDC (beats 2026 competitor),+0.0146,0.800,5.89e-14

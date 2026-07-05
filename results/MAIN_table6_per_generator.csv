@@ -1,0 +1,7 @@
+generator,tool,apfd_mean,apfd_std
+ambiegen,RoadFury,0.7533,0.0557
+ambiegen,KSERESNET-V2 (proposed),0.7278,0.0518
+frenetic,RoadFury,0.8029,0.0544
+frenetic,KSERESNET-V2 (proposed),0.7935,0.0522
+freneticV,RoadFury,0.8363,0.0453
+freneticV,KSERESNET-V2 (proposed),0.8221,0.0485

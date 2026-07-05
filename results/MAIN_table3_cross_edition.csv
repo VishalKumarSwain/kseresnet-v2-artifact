@@ -1,0 +1,9 @@
+tool,apfd,apfdc,success_rate_%
+ITS4SDC,0.707,0.760,100.0
+CurvatureSelector,0.597,0.607,100.0
+GraphSelector,0.587,0.619,100.0
+TransformerSelector,0.560,0.581,100.0
+CertiFail,0.549,0.572,100.0
+MLSelector,0.546,0.591,100.0
+DRVN,0.537,0.575,98.7
+Detour,0.520,0.577,98.7
