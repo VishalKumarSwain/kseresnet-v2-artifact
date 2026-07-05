@@ -174,8 +174,9 @@ related but distinct problem -- improving oracle reliability across
 simulator/real-world divergence -- via redundant simulation rather than
 learned models.
 
-\emph{Test prioritization} -- producing a full ranking rather than a subset
--- has received comparatively less attention. \citet{birchler2023single}
+\emph{Test prioritization} -- producing a full ranking rather than a subset,
+classically evaluated via APFD \citep{rothermel2001prioritizing} -- has
+received comparatively less attention in the SDC context. \citet{birchler2023single}
 formulate SDC prioritization as a single- and multi-objective search
 problem using coverage- and diversity-based objectives, evaluated with APFD.
 Our work differs in three respects. First, we study \emph{learned,
@@ -375,7 +376,8 @@ published baseline figures.
 \subsection{Metrics}
 \label{sec:metrics}
 Given a prioritized order of $n$ tests with $m$ failing tests at positions
-$TF_1,\dots,TF_m$:
+$TF_1,\dots,TF_m$, Average Percentage of Fault Detection (APFD)
+\citep{rothermel2001prioritizing} is defined as:
 \begin{equation}
 \mathrm{APFD} = 1 - \frac{\sum_{i=1}^{m} TF_i}{nm} + \frac{1}{2n}
 \end{equation}
@@ -473,9 +475,10 @@ competition editions (Section~\ref{sec:discussion}).
 
 \subsection{Statistical Analysis}
 For every paired comparison we report the mean difference, the Wilcoxon
-signed-rank test, and the Vargha--Delaney $\hat{A}_{12}$ effect size. Where
-multiple tests support a single research question, we apply a
-Holm--Bonferroni correction within that family.
+signed-rank test \citep{wilcoxon1992individual}, and the Vargha--Delaney
+$\hat{A}_{12}$ effect size \citep{vargha2000critique}. Where multiple tests
+support a single research question, we apply a Holm--Bonferroni correction
+\citep{holm1979simple} within that family.
 
 \section{Results}
 \label{sec:results}
@@ -782,6 +785,8 @@ subgroup.
 
 \section{Threats to Validity}
 \label{sec:threats}
+We organize this section using the construct/internal/external/conclusion
+validity framework of \citet{wohlin2012experimentation}.
 \textbf{Construct.} APFD is a standard but imperfect proxy for
 fault-detection cost-effectiveness; we also report $\mathrm{APFD}_C$ where
 possible. Our reconstructed corpus contains 3{,}426 more FreneticV tests
