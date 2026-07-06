@@ -1,4 +1,4 @@
-\documentclass{svjour3}
+\documentclass[smallextended]{svjour3}
 \smartqed
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -350,7 +350,16 @@ suggest the additional tests are disproportionately easy (PASS-heavy) or
 hard (FAIL-heavy). This does not rule out subtler distributional
 differences we cannot detect without the organizers' exact FreneticV
 subset, and we report it as a residual limitation rather than a resolved
-one (Section~\ref{sec:threats}). We split the full 36{,}006-test corpus
+one (Section~\ref{sec:threats}). More directly: Section~\ref{sec:harness}
+shows that every one of the four official tools we did not build ourselves
+(RoadFury, EagleSemble, RTE4SDC, ITEP4SDC) reproduces its
+independently published APFD within 0.03 when run against this corpus,
+and the two tools with known reliability defects reproduce the identical
+root-cause failure. Since those tools' behavior is determined entirely by
+the input data, this match is direct evidence that our reconstructed
+corpus is functionally faithful to the one underlying the organizers'
+evaluation, independent of the disclosed FreneticV count difference. We
+split the full 36{,}006-test corpus
 80/20 (28{,}804 / 7{,}202 tests) with a fixed seed, and used the 20\%
 held-out portion \emph{exclusively} for evaluating any model we trained
 ourselves, to avoid training/evaluation leakage
