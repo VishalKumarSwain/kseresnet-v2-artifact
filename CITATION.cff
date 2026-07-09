@@ -14,6 +14,10 @@ authors:
     given-names: Pisipati Radha
     affiliation: "National Institute of Technology Warangal"
     email: prkrishna@nitw.ac.in
+  - family-names: Das
+    given-names: Avijit
+    affiliation: "Electronics & Radar Development Establishment, Defence Research & Development Organisation"
+    email: avijitdas.lrde@gov.in
 date-released: 2026-07-05
 license: MIT
 repository-code: "https://github.com/VishalKumarSwain/kseresnet-v2-artifact"
@@ -27,6 +31,8 @@ preferred-citation:
       given-names: Sangharatna
     - family-names: Krishna
       given-names: Pisipati Radha
+    - family-names: Das
+      given-names: Avijit
   journal: "Empirical Software Engineering"
   status: submitted
   year: 2026
