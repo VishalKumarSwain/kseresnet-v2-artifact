@@ -480,6 +480,25 @@ thresholds we interpret alongside standard effect-size guidance
 research question, we apply a Holm--Bonferroni correction
 \citep{holm1979simple} within that family.
 
+\textbf{Unit of analysis.} Every paired test in this paper pairs two tools'
+mean APFD on the \emph{same trial} -- a single randomly sampled evaluation
+subject (a held-out test suite of a given size) -- not individual test
+cases. Both tools in a comparison are scored on an identical, seed-aligned
+sequence of subjects, so trial $i$ denotes the same sampled subject for
+both. Sample size varies by research question depending on how many trials
+were run for that specific comparison: $N=75$ trials (seed 42, subject
+sizes 10--80, one trial per size per repeat) for the RQ2 ablation, the
+epoch-count and per-generator robustness checks; $N=160$ trials (seed 7,
+subject sizes 10--200 across 8 sizes $\times$ 20 repeats) for the RQ3 main
+comparisons and the generator-stratified and Transformer robustness
+checks. We state $N$ explicitly alongside each test below. Because the
+unit of analysis is the trial, not the test case, an extreme p-value
+reflects a small $N$ with a highly consistent direction of effect, not a
+large sample: e.g., $p=7.6\times10^{-28}$ in RQ3 arises because the
+proposed model outperforms the baseline in 159 of the 160 trials with zero
+losses (one tie), which drives the paired test close to its theoretical
+minimum p-value at that sample size, rather than from any error in $N$.
+
 \section{Results}
 \label{sec:results}
 
@@ -536,11 +555,12 @@ estimates of the same underlying (untrained-by-us) model's effectiveness,
 and their agreement is a sanity check on measurement stability rather than
 a claim that the two protocols are interchangeable. Adding the geometry
 features while holding adaptation
-fixed improves mean APFD by 0.143 ($\hat{A}_{12}=0.980$,
-$p=1.7\times10^{-13}$); adding fine-tuning while holding the feature set
-fixed improves it by only 0.028 with weak features and, with the richer
-feature set already in place, is not merely non-additive but mildly
-\emph{harmful} ($\hat{A}_{12}=0.327$, $p=0.022$). Channel-importance analysis
+fixed improves mean APFD by 0.143 ($N=75$ trials, proposed features win 72,
+tie 3, lose 0; $\hat{A}_{12}=0.980$, $p=1.7\times10^{-13}$); adding
+fine-tuning while holding the feature set fixed improves it by only 0.028
+with weak features and, with the richer feature set already in place, is
+not merely non-additive but mildly \emph{harmful} ($N=75$ trials,
+$\hat{A}_{12}=0.327$, $p=0.022$). Channel-importance analysis
 (zeroing each of the 8 channels and measuring the resulting drop in
 fail/pass separation AUC \citep{fawcett2006introduction}) confirms the
 mechanism: the two geometry channels
@@ -566,13 +586,18 @@ Figure~\ref{fig:channels} shows this ranked by channel.
 \label{sec:rq3}
 Table~\ref{tab:main} reports our main result: retraining with the pairwise
 ranking loss (Section~\ref{sec:proposed}) on the held-out split raises mean
-APFD from 0.625 to 0.794 ($\hat{A}_{12}=0.997$,
-$p=7.6\times10^{-28}$), and $\mathrm{APFD}_C$ from 0.668 to 0.855. The
-proposed model statistically exceeds RTE4SDC ($\hat{A}_{12}=0.800$,
-$p=5.9\times10^{-14}$) and is within 0.009 APFD of RoadFury, the eventual
-competition winner ($\hat{A}_{12}=0.750$, $p=4.2\times10^{-13}$) -- a real
-but small remaining gap. All comparisons survive Holm--Bonferroni correction
-within the RQ3 family.
+APFD from 0.625 to 0.794 ($N=160$ trials, $\hat{A}_{12}=0.997$,
+$p=7.6\times10^{-28}$), and $\mathrm{APFD}_C$ from 0.668 to 0.855. As
+Section~\ref{sec:methodology} notes, this p-value is extreme because the
+effect is extremely consistent, not because $N$ is large: the proposed
+model beats the baseline in 159 of these 160 trials, with zero losses and
+one tie, so $\hat{A}_{12}=(159+0.5)/160=0.997$ directly reflects that
+near-complete pairwise dominance. The proposed model statistically exceeds
+RTE4SDC ($N=160$ trials, $\hat{A}_{12}=0.800$, $p=5.9\times10^{-14}$) and is
+within 0.009 APFD of RoadFury, the eventual competition winner ($N=160$
+trials, $\hat{A}_{12}=0.750$, $p=4.2\times10^{-13}$) -- a real but small
+remaining gap. All comparisons survive Holm--Bonferroni correction within
+the RQ3 family.
 
 \begin{figure}[t]
 \centering
@@ -583,7 +608,8 @@ within the RQ3 family.
 
 \begin{table}[t]
 \caption{Main results: baseline vs.\ proposed vs.\ 2026 competitors,
-held-out split ($N=6{,}516$ tests, 160 trials, sizes 10--200).}
+held-out split (drawn from a pool of 6{,}516 held-out tests; statistical
+tests below use $N=160$ trials, subject sizes 10--200).}
 \label{tab:main}
 \begin{tabular}{lrrrr}
 \toprule
@@ -623,25 +649,29 @@ further as a threat to validity in Section~\ref{sec:threats}.
 We tested three plausible alternative paths to closing the remaining gap
 to RoadFury (Table~\ref{tab:design}), none of which improved on the main
 result. (i) \emph{More training} (40 vs.\ 15 epochs) produced a small but
-significant \emph{decrease} (mean APFD $-0.0016$, $p=0.0003$) -- mild
-overfitting, not underfitting. (ii) \emph{Generator-stratified pair
-sampling} during training, intended to prevent the model from exploiting
-cross-generator base failure-rate differences (Ambiegen 45\% vs.\ Frenetic
-37\% vs.\ FreneticV 33\%) rather than learning genuine within-generator
-discrimination, produced no measurable change ($p=0.11$), which also rules
-out that specific mechanism as an explanation for the RQ4 finding below.
-(iii) A \emph{Transformer encoder} backbone \citep{vaswani2017attention},
-trained under an identical two-phase (pointwise pretrain, then ranking
-fine-tune) recipe on the same features, performed substantially
-\emph{worse} than the ResNet (mean APFD 0.742 vs.\ 0.794,
-$\hat{A}_{12}=0.950$, $p<10^{-25}$) -- architecture family is not, on this
-budget, a lever toward closing the gap, even though the competition's
-best-performing tool (RoadFury) also uses a Transformer, which we attribute
-to differences in feature richness or training scale we did not have access
-to reproduce, not to the architecture per se.
+significant \emph{decrease} ($N=75$ trials, mean APFD $-0.0016$,
+$p=0.0003$) -- mild overfitting, not underfitting. (ii)
+\emph{Generator-stratified pair sampling} during training, intended to
+prevent the model from exploiting cross-generator base failure-rate
+differences (Ambiegen 45\% vs.\ Frenetic 37\% vs.\ FreneticV 33\%) rather
+than learning genuine within-generator discrimination, produced no
+measurable change ($N=160$ trials, $\hat{A}_{12}=0.431$, $p=0.11$), which
+also rules out that specific mechanism as an explanation for the RQ4
+finding below. (iii) A \emph{Transformer encoder} backbone
+\citep{vaswani2017attention}, trained under an identical two-phase
+(pointwise pretrain, then ranking fine-tune) recipe on the same features,
+performed substantially \emph{worse} than the ResNet ($N=160$ trials,
+mean APFD 0.742 vs.\ 0.794, the ResNet wins 148 of 160 trials with 4
+losses and 8 ties; $\hat{A}_{12}=0.950$, $p<10^{-25}$) -- architecture
+family is not, on this budget, a lever toward closing the gap, even though
+the competition's best-performing tool (RoadFury) also uses a Transformer,
+which we attribute to differences in feature richness or training scale we
+did not have access to reproduce, not to the architecture per se.
 
 \begin{table}[t]
-\caption{Alternative design choices tested and not adopted.}
+\caption{Alternative design choices tested and not adopted. Unit of
+analysis is the trial (Section~\ref{sec:methodology}): $N=75$ trials for
+the epoch-count row, $N=160$ trials for the other two.}
 \label{tab:design}
 \begin{tabular}{p{3.6cm}p{3.6cm}p{3.6cm}}
 \toprule
@@ -660,23 +690,23 @@ Breaking the RQ3 comparison down by road generator (Table~\ref{tab:gen})
 reveals that the proposed model's aggregate improvement is not uniform.
 Relative to the intermediate, pointwise-trained, feature-only model (the
 same condition as ``Proposed features + pointwise fine-tune'' in
-Table~\ref{tab:ablation}, here resampled per generator under the held-out
-protocol), the proposed (ranking-trained) model is significantly
-\emph{worse} on Ambiegen
-($\hat{A}_{12}=0.353$, $p=0.003$) and FreneticV
-($\hat{A}_{12}=0.253$, $p<0.0001$), and not significantly different on
-Frenetic ($p=0.28$). In raw APFD these regressions are small (0.004 and
-0.008 respectively), and with $N=6{,}516$ tests a p-value this small is
-unsurprising for almost any non-zero effect -- so we deliberately report
-the effect size, not the p-value, as the basis for calling these
-regressions meaningful: $\hat{A}_{12}=0.253$ and $0.353$ both fall at or
-beyond the conventional medium-to-large threshold for the Vargha--Delaney
-statistic \citep{vargha2000critique}, indicating a consistent, not merely
-detectable, shift in the probability that the proposed model ranks a
-randomly drawn subject worse than the intermediate model. We report this
-as a real but modest finding: it is not, on its own, grounds to prefer the
-intermediate model in practice, but it does mean the aggregate RQ3
-improvement should not be read as a uniform within-generator improvement.
+Table~\ref{tab:ablation}, here resampled per generator under a separate
+held-out protocol of $N=75$ trials per generator, seed 42, subject sizes
+10--80), the proposed (ranking-trained) model is significantly
+\emph{worse} on Ambiegen (loses 42 of 75 trials, wins 20, ties 13;
+$\hat{A}_{12}=0.353$, $p=0.003$) and FreneticV (loses 43 of 75, wins 6,
+ties 26; $\hat{A}_{12}=0.253$, $p<0.0001$), and not significantly
+different on Frenetic (wins 26, ties 24, losses 25; $p=0.28$). In raw APFD
+these regressions are small (0.004 and 0.008 respectively); we report the
+effect size alongside the p-value, rather than the p-value alone, because
+$\hat{A}_{12}$ is what shows these are a consistent shift in outcome across
+most of the 75 trials rather than a large swing in a handful of them:
+$\hat{A}_{12}=0.253$ and $0.353$ both fall at or beyond the conventional
+medium-to-large threshold for the Vargha--Delaney statistic
+\citep{vargha2000critique}. We report this as a real but modest finding:
+it is not, on its own, grounds to prefer the intermediate model in
+practice, but it does mean the aggregate RQ3 improvement should not be
+read as a uniform within-generator improvement.
 This is a Simpson's-paradox-like effect \citep{simpson1951interpretation}: the
 aggregate, mixed-generator comparison shows improvement because it also
 rewards correctly ordering \emph{across} generators with different base
@@ -697,7 +727,8 @@ aggregate advantage narrows or reverses within individual generators.}
 \end{figure}
 
 \begin{table}[t]
-\caption{Per-generator APFD (mean).}
+\caption{Per-generator APFD (mean), $N=75$ trials per generator (seed 42,
+subject sizes 10--80).}
 \label{tab:gen}
 \begin{tabular}{lrrr}
 \toprule
@@ -754,7 +785,8 @@ Detour & 0.520 & 99\% \\
 \end{table}
 
 \begin{table}[t]
-\caption{Ablation: feature set $\times$ adaptation strategy.}
+\caption{Ablation: feature set $\times$ adaptation strategy. $N=75$ trials
+(seed 42, subject sizes 10--80) per cell.}
 \label{tab:ablation}
 \begin{tabular}{lrr}
 \toprule
@@ -816,11 +848,12 @@ against ITEP4SDC and EagleSemble elsewhere in this paper (e.g.,
 Table~\ref{tab:main}) should be read as descriptive, not as validated
 head-to-head claims. Relatedly, the per-generator regressions reported in
 RQ4 are small in absolute APFD terms (0.004--0.008); we report them because
-their Vargha--Delaney effect sizes ($\hat{A}_{12}=0.253$--$0.353$) meet the
-conventional threshold for a medium-to-large effect \citep{vargha2000critique},
-not merely because $p<0.05$ under a large sample -- but we do not claim
-these regressions are large enough to change a practitioner's tool choice
-on their own. \textbf{External.} All experiments use a single dataset
+their Vargha--Delaney effect sizes ($\hat{A}_{12}=0.253$--$0.353$, $N=75$
+trials per generator) show the proposed model losing a majority of
+individual trials to the intermediate model in Ambiegen and FreneticV, not
+because $p<0.05$ makes the difference notable on its own -- but we do not
+claim these regressions are large enough to change a practitioner's tool
+choice on their own. \textbf{External.} All experiments use a single dataset
 (SensoDat) and a single simulator; generalization to other SDC simulation
 platforms is untested. \textbf{Conclusion validity.} We apply
 Holm--Bonferroni correction within each RQ's family of tests to mitigate
