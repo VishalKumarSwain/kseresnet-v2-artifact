@@ -510,6 +510,25 @@ proposed model outperforms the baseline in 159 of the 160 trials with zero
 losses (one tie), which drives the paired test close to its theoretical
 minimum p-value at that sample size, rather than from any error in $N$.
 
+\textbf{Trial independence.} Because trials are drawn by repeated random
+sampling from a shared pool rather than by partitioning it, individual
+test cases can appear in more than one trial, which could in principle
+correlate trials' outcomes and inflate the Wilcoxon test's apparent
+significance. We checked this directly rather than assuming it away, for
+both protocols. For the $N=160$ protocol (subject sizes 10--200 drawn from
+the 6{,}516-test held-out pool), the mean pairwise Jaccard overlap between
+any two trials' evaluation subjects is 0.4\% overall, rising to 2.7\% on
+average (6\% at worst, across all 12{,}720 trial pairs) at the largest
+subject size (200). For the $N=75$ per-generator protocol (subject sizes
+10--80 drawn from smaller, generator-specific pools of 2{,}256--2{,}523
+tests), overlap is modestly higher but still small: 0.6--0.7\% overall,
+rising to 1.7\% on average (at most 7--8\%, across all 2{,}775 trial
+pairs) at the largest subject size (80). Both are expected from the
+pool-to-subject size ratio alone and match the organizers' own resampling
+protocol \citep{aryan2026icst}: at this scale, cross-trial overlap is not
+a material source of correlation, and we treat trials within each
+protocol as effectively independent draws.
+
 \section{Results}
 \label{sec:results}
 
