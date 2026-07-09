@@ -168,6 +168,8 @@ design_rows = [
      "result": "No effect (-0.0004 APFD, p=0.11)", "decision": "Not adopted -- did not fix the per-generator inconsistency"},
     {"design_choice": "Transformer encoder backbone (same features/recipe)",
      "result": "Substantially worse (-0.052 APFD, p<1e-25)", "decision": "Not adopted -- underperforms ResNet under our data/compute budget"},
+    {"design_choice": "Listwise ranking loss (ListNet-style, same recipe)",
+     "result": "Substantially worse (-0.0214 APFD, p=9.8e-23)", "decision": "Not adopted -- underperforms pairwise loss under our data/compute budget"},
 ]
 write_table("MAIN_table5_design_decisions", "Table 5: Alternative design choices explored (not adopted)",
             design_rows, ["design_choice", "result", "decision"])
