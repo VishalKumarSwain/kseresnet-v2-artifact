@@ -777,6 +777,39 @@ ranking. To our
 knowledge, no prior evaluation of ML-based SDC test prioritizers reports a
 per-generator breakdown; aggregate APFD alone would not have surfaced this.
 
+\textbf{Example-level error analysis.} To move beyond the aggregate
+statistic, we scored every held-out test in each generator with both
+models directly and examined individual rank changes for FAIL tests.
+First, we looked for a geometric signature that distinguishes demoted
+FAIL tests from the rest: mean and maximum $|\text{curvature}|$ and mean
+$|\text{angle\_change}|$ for the most-demoted decile of FAIL tests are
+statistically indistinguishable from the least-demoted decile in every
+generator (e.g., Ambiegen: mean $|\text{curvature}|=0.0305$ vs.\ $0.0282$;
+FreneticV: $0.0248$ vs.\ $0.0231$) -- demotion is not concentrated in an
+identifiable road-shape subtype we can characterize from these features.
+Second, we categorized \emph{why} each demoted FAIL test's rank got worse:
+for every FAIL test the intermediate model ranked ahead of the proposed
+model, we identified which specific tests newly overtake it and whether
+they are themselves FAIL (a reordering \emph{within} the correctly-flagged
+tests, largely harmless to APFD) or PASS (a genuine rank inversion that
+directly costs APFD). Both occur, and their mix varies by generator: 74\%
+of Ambiegen's demoted FAIL tests, 58\% of FreneticV's, and 51\% of
+Frenetic's are overtaken by at least one PASS test. Two concrete Ambiegen
+examples illustrate the range: test \texttt{mt/set\_8/ambiegen/odr/test-1}
+drops from rank 392 to 661 (of 2{,}523), but 264 of its 269 overtakers are
+themselves FAIL tests -- the ranking-trained model has learned to
+prioritize other failures even more aggressively, which barely affects
+APFD. Test \texttt{mt/set\_12/ambiegen/test-446} drops from rank 930 to
+1190, but 100 of its 260 overtakers are PASS tests that the intermediate
+model had correctly ranked behind it -- a genuine inversion. We take this
+as evidence that the RQ4 regression is a mix of a mostly benign
+redistribution of confidence among true failures and a smaller but real
+rate of fail/pass rank inversions, rather than a single mechanistic
+failure mode; we did not identify a feature-level property that predicts
+which case a given test falls into, and leave a more targeted diagnosis
+(e.g., attention or saliency analysis of the network itself) to future
+work.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\textwidth]{Fig3.png}
