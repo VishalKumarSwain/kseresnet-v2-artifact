@@ -647,6 +647,28 @@ trials, $\hat{A}_{12}=0.750$, $p=4.2\times10^{-13}$) -- a real but small
 remaining gap. All comparisons survive Holm--Bonferroni correction within
 the RQ3 family.
 
+\textbf{Is the remaining gap to RoadFury practically meaningful?} We
+state this plainly rather than leaving it implicit. The gap is real, not
+deployment noise: $\hat{A}_{12}=0.750$ means RoadFury outperforms the
+proposed model in a clear majority of trials, not merely on a fragile
+average, and this holds across the full 10--200 size range we test (mean
+per-size APFD gap ranges from 0.005 at size 30 to 0.017 at size 50, with
+no size at which the proposed model wins outright). But its
+\emph{practical} magnitude is small: translating the aggregate 0.009 APFD
+gap into fault-detection position using $\mathrm{APFD}=1-\frac{\sum
+TF_i}{nm}+\frac{1}{2n}$ gives an average per-fault detection delay of
+0.009$\times n$ positions at subject size $n$ -- about 0.1 positions at
+$n=10$, rising to about 1.2 positions at the largest size we test
+($n=200$). That is, RoadFury detects the average fault roughly one test
+position earlier in a 200-test suite, and less at smaller sizes. We do
+not think this magnitude, on its own, should be the deciding factor in a
+practitioner's tool choice: the proposed model's more than $2\times$
+faster prioritization time (0.370s vs.\ 0.804s, Table~\ref{tab:main}) is
+arguably just as relevant to that decision. What we do claim is narrower
+and better supported: the gap is statistically real, small in absolute
+terms, and one of several factors -- not the only one -- a practitioner
+would weigh.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\textwidth]{Fig1.png}
@@ -765,10 +787,26 @@ $\hat{A}_{12}$ is what shows these are a consistent shift in outcome across
 most of the 75 trials rather than a large swing in a handful of them:
 $\hat{A}_{12}=0.253$ and $0.353$ both fall at or beyond the conventional
 medium-to-large threshold for the Vargha--Delaney statistic
-\citep{vargha2000critique}. We report this as a real but modest finding:
-it is not, on its own, grounds to prefer the intermediate model in
-practice, but it does mean the aggregate RQ3 improvement should not be
-read as a uniform within-generator improvement.
+\citep{vargha2000critique}.
+
+\textbf{Does this have practical consequence for a practitioner's tool
+choice?} We answer this directly rather than leaving it as a caveat. The
+effect is statistically real -- $\hat{A}_{12}=0.253$ and $0.353$ indicate
+a consistent shift, not noise in a handful of trials -- but its practical
+magnitude, using the same fault-detection-position translation as
+Section~\ref{sec:rq3}, is small and size-dependent: at subject size 80
+(the largest size in this protocol), the average fault is detected about
+1.1 positions later on Ambiegen and 0.9 positions later on FreneticV; at
+size 10 the effect is close to zero on both (Table~\ref{tab:gen} reflects
+sizes up to 80 only). We do not think a delay of roughly one test
+position in an 80-test suite is, on its own, grounds for a practitioner
+to prefer the intermediate model over the proposed one -- the aggregate
+RQ3 improvement (0.625 to 0.794 APFD) is far larger and holds across the
+full mixed-generator pool. What this finding does mean is narrower: the
+aggregate RQ3 improvement should not be read as a uniform
+within-generator improvement, and any deployment that runs exclusively on
+a single generator's tests should be aware the proposed model is not
+strictly dominant there.
 This is a Simpson's-paradox-like effect \citep{simpson1951interpretation}: the
 aggregate, mixed-generator comparison shows improvement because it also
 rewards correctly ordering \emph{across} generators with different base
@@ -962,14 +1000,12 @@ production-grade reliability of deployed ML components
 restricting our significance claims to RTE4SDC, but the numeric comparisons
 against ITEP4SDC and EagleSemble elsewhere in this paper (e.g.,
 Table~\ref{tab:main}) should be read as descriptive, not as validated
-head-to-head claims. Relatedly, the per-generator regressions reported in
-RQ4 are small in absolute APFD terms (0.004--0.008); we report them because
-their Vargha--Delaney effect sizes ($\hat{A}_{12}=0.253$--$0.353$, $N=75$
-trials per generator) show the proposed model losing a majority of
-individual trials to the intermediate model in Ambiegen and FreneticV, not
-because $p<0.05$ makes the difference notable on its own -- but we do not
-claim these regressions are large enough to change a practitioner's tool
-choice on their own. \textbf{External.} All experiments use a single
+head-to-head claims. Relatedly, we address the practical (as opposed to
+statistical) significance of the RQ4 per-generator regressions directly
+in Section~\ref{sec:rq4}, rather than treating it only as a threat: the
+effect sizes are real, but the translated practical magnitude (roughly
+one test position at the largest subject size tested) is small.
+\textbf{External.} All experiments use a single
 dataset (SensoDat) and a single simulator; we did not replicate any of
 RQ1--RQ4 on a second corpus, and this is a real limitation, not a merely
 disclosed one. We did not attempt a second corpus in this revision because
