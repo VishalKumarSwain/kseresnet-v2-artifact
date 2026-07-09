@@ -11,7 +11,7 @@
 \title{When Accuracy Misleads: Diagnosing and Repairing Ranking Failures in
 ML-Based Test Prioritization for Self-Driving Cars}
 
-\author{Vishal Kumar Swain \and Sangharatna Godboley \and Pisipati Radha Krishna}
+\author{Vishal Kumar Swain \and Sangharatna Godboley \and Pisipati Radha Krishna \and Avijit Das}
 
 \institute{Vishal Kumar Swain \at
 Department of Computer Science \& Engineering, National Institute of
@@ -27,6 +27,11 @@ Pisipati Radha Krishna \at
 Department of Computer Science \& Engineering, National Institute of
 Technology, Warangal, Telangana, India \\
 \email{prkrishna@nitw.ac.in}
+\and
+Avijit Das \at
+Electronics \& Radar Development Establishment, Defence Research \&
+Development Organisation, Bengaluru, India \\
+\email{avijitdas.lrde@gov.in}
 }
 
 \date{Received: date / Accepted: date}
@@ -94,11 +99,11 @@ the prioritization task, scored by Average Percentage of Fault Detection
 tools, KSERESNET \citep{swain2026kseresnet}, reported 95.27\% classification
 accuracy and a self-reported APFD of 0.8131 in its own evaluation. The
 organizers' independent evaluation, however, measured a mean APFD of only
-0.62 \citep{aryan2026icst} -- barely better than a random ordering (0.50)
-and far behind the eventual winner (0.80). This paper's motivation is
+0.625 \citep{aryan2026icst} -- barely better than a random ordering (0.513)
+and far behind the eventual winner (0.803). This paper's motivation is
 therefore twofold. First, there is a large gap \emph{on the same metric}
 between the self-reported and independently measured APFD (0.8131 vs.\
-0.62), which we do not attempt to explain (we did not have access to the
+0.625), which we do not attempt to explain (we did not have access to the
 original submission's training procedure or evaluation code) but which
 motivates evaluating exclusively under an independently reproduced protocol
 throughout this paper (Section~\ref{sec:methodology}). Second, and the
@@ -876,7 +881,8 @@ generator-level regression directly, and, if competition infrastructure is
 extended to expose simulation cost, pursue genuinely cost-aware training.
 
 \section*{Statements and Declarations}
-\textbf{Funding.} [To be completed.]
+\textbf{Funding.} This work is supported by DIAL Grant, IBITF, IIT Bhilai,
+DST, Govt. of India.
 \textbf{Competing interests.} The authors declare no competing interests.
 \textbf{Data availability.} The SensoDat corpus is publicly available
 \citep{birchler2024sensodat}. All code, trained model checkpoints, dataset
