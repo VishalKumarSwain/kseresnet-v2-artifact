@@ -64,8 +64,9 @@ adaptation, drives most of the achievable improvement. Retraining with a
 pairwise ranking loss raises mean APFD from 0.625 to 0.794 (Wilcoxon
 $p=7.6\times10^{-28}$, $\hat{A}_{12}=0.997$), statistically exceeding one
 2026 competition tool and closing the gap to the eventual winner to 0.009
-APFD. Two further findings qualify this result: the improvement partly
-masks generator-specific regressions invisible in aggregate metrics, and
+APFD. Two further findings qualify this result: the improvement is
+accompanied by small but statistically consistent generator-specific
+regressions (0.004-0.008 APFD) invisible in the aggregate metric, and
 three follow-up experiments testing plausible alternative explanations
 (more training, stratified sampling, a Transformer backbone) each produced
 a real, measurable decrease relative to the proposed model, not merely a
@@ -73,8 +74,9 @@ null result.
 \textbf{Conclusions.} Classification accuracy is an unreliable indicator of
 prioritization effectiveness for ML-based SDC test prioritizers; the
 mismatch is large, measurable, and repairable with a ranking-aware training
-objective, but aggregate improvement can obscure subgroup regressions that
-prior evaluations of this class of tool do not examine.
+objective, but aggregate improvement can obscure small, statistically
+consistent subgroup-level regressions that prior evaluations of this class
+of tool do not examine.
 \keywords{Test case prioritization \and Self-driving cars \and
 Simulation-based testing \and Learning to rank \and Empirical study}
 \end{abstract}
@@ -144,7 +146,8 @@ beyond this specific tool.
   significance tests and effect sizes (RQ3), together with three
   robustness checks that rule out simpler alternative explanations for the
   remaining gap to the state of the art.
-\item A finding that aggregate APFD improvement can mask road-generator-level
+\item A finding that aggregate APFD improvement can mask small
+  (0.004--0.008 APFD) but statistically consistent road-generator-level
   regressions (RQ4), not previously examined in this line of work.
 \item A cross-edition comparison showing that test-\emph{selection} tools
   from the prior (2025) competition edition, converted to full orderings,
@@ -896,9 +899,10 @@ just 0.11 above a random ordering. This effect is diagnosable (a pointwise
 training objective) and substantially repairable (a ranking-aware
 retraining closes the gap to the state of the art from 0.18 to 0.009 APFD)
 without discarding the underlying architecture. This repair is not,
-however, complete or uniform: it does not survive a per-generator
-breakdown for two of three generators, and three plausible follow-up
-improvements (more training, stratified sampling, a Transformer backbone)
+however, complete or uniform: two of three generators show a small but
+statistically consistent regression under a per-generator breakdown, and
+three plausible follow-up improvements (more training, stratified
+sampling, a Transformer backbone)
 did not close the remaining gap further. Future work should pursue a full
 (not warm-started) retraining of the base model, address the
 generator-level regression directly, and, if competition infrastructure is
