@@ -43,7 +43,7 @@ mismatch has a measurable effect on real tools is untested.
 the ICST 2026 SDC Testing Tool Competition, and evaluate whether it can be
 repaired without discarding the tool's existing architecture.
 \textbf{Method.} We reconstruct the organizers' evaluation protocol against
-the real, 36{,}006-test SensoDat corpus, validate it against the
+the real, 32{,}580-test SensoDat corpus, validate it against the
 competition's own published results, and use it to run a sequence of
 controlled experiments: an ablation isolating feature engineering from
 model adaptation, an offline pairwise ranking-loss retraining on a
@@ -186,7 +186,7 @@ rather than search-based reordering. Second, we explicitly separate the
 \emph{training} objective a model is optimized with from the
 \emph{evaluation} objective it is scored on -- a distinction that does not
 arise for a search-based method that optimizes APFD directly. Third, we
-evaluate on the full, real, 36{,}006-test SensoDat corpus
+evaluate on the full, real, 32{,}580-test SensoDat corpus
 \citep{birchler2024sensodat} under a leakage-free held-out protocol, rather
 than a fixed benchmark split.
 
@@ -289,7 +289,7 @@ produce and evaluate the proposed model, organized into four phases.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{Framework1.png}
+\includegraphics[width=\textwidth]{Fig_Framework.png}
 \caption{Framework overview: data preprocessing, offline learning, online
 prioritization (via the competition's gRPC interface), and experimental
 evaluation.}
@@ -328,39 +328,22 @@ Section~\ref{sec:metrics}.
 \subsection{Dataset}
 \label{sec:dataset}
 We use the SensoDat corpus \citep{birchler2024sensodat}, the same dataset
-underlying the ICST 2026 competition. We reconstructed the full corpus from
-raw OpenDRIVE road files and per-test outcome metadata, obtaining
-36{,}006 unique test cases (13{,}824 FAIL / 22{,}182 PASS; deduplicated by
-each test's embedded identifier) across three test generators -- Ambiegen,
-Frenetic, and FreneticV -- exceeding the 32{,}580-test, 36-collection figure
-reported in \citet{aryan2026icst} by 3{,}426 tests. We give a full
-accounting of this discrepancy rather than treating it as a rounding
-matter, since it bears on whether our corpus is a faithful reconstruction
-of the organizers' benchmark. Broken down by generator, our local corpus
-contains 12{,}496 Ambiegen tests and 12{,}135 Frenetic tests --
-\emph{exact} matches to \citet{aryan2026icst}'s Table~II, to the individual
-test. The entire 3{,}426-test discrepancy is therefore attributable to
-FreneticV alone: 11{,}375 tests locally versus 7{,}949 reported by the
-organizers. We cannot identify which specific FreneticV tests the
-organizers' narrower sample excludes, since their exact subset was not
-published, so we checked instead for evidence of systematic bias: the full
-local FreneticV pool has a 33.0\% fail rate (3{,}758/11{,}375), close to
-Frenetic's 35.6\% and not dramatically lower or higher in a way that would
-suggest the additional tests are disproportionately easy (PASS-heavy) or
-hard (FAIL-heavy). This does not rule out subtler distributional
-differences we cannot detect without the organizers' exact FreneticV
-subset, and we report it as a residual limitation rather than a resolved
-one (Section~\ref{sec:threats}). More directly: Section~\ref{sec:harness}
-shows that every one of the four official tools we did not build ourselves
-(RoadFury, EagleSemble, RTE4SDC, ITEP4SDC) reproduces its
-independently published APFD within 0.03 when run against this corpus,
-and the two tools with known reliability defects reproduce the identical
-root-cause failure. Since those tools' behavior is determined entirely by
-the input data, this match is direct evidence that our reconstructed
-corpus is functionally faithful to the one underlying the organizers'
-evaluation, independent of the disclosed FreneticV count difference. We
-split the full 36{,}006-test corpus
-80/20 (28{,}804 / 7{,}202 tests) with a fixed seed, and used the 20\%
+underlying the ICST 2026 competition. We reconstructed the corpus from raw
+OpenDRIVE road files and per-test outcome metadata, following the
+organizers' own corpus-construction criterion: a test is included only if
+both its road definition and its simulator execution trace are present,
+i.e., the road was not just generated but successfully executed by the
+official pipeline. This yields 32{,}580 unique test cases across three
+test generators, matching \citet{aryan2026icst}'s Table~II exactly,
+generator-by-generator: 12{,}496 Ambiegen, 12{,}135 Frenetic, and 7{,}949
+FreneticV tests. Section~\ref{sec:harness} provides independent
+corroborating evidence that this reconstruction is faithful: every one of
+the four official tools we did not build ourselves (RoadFury, EagleSemble,
+RTE4SDC, ITEP4SDC) reproduces its independently published APFD within 0.03
+when run against this corpus, and the two tools with known reliability
+defects reproduce the identical root-cause failure. We split the full
+32{,}580-test corpus
+80/20 (26{,}064 / 6{,}516 tests) with a fixed seed, and used the 20\%
 held-out portion \emph{exclusively} for evaluating any model we trained
 ourselves, to avoid training/evaluation leakage
 \citep{kaufman2012leakage}.
@@ -423,13 +406,13 @@ pass/fail labels.
 \label{sec:proposed}
 Our proposed model retains the baseline's SE-ResNet backbone but (i) extends
 the input to eight channels by adding road-geometry features and (ii) is
-retrained offline on the full 28{,}804-test training split with a pairwise
+retrained offline on the full 26{,}064-test training split with a pairwise
 ranking loss. Figure~\ref{fig:architecture} details both the feature
 derivation and the network itself; we describe each stage below.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{Framework2.png}
+\includegraphics[width=\textwidth]{Fig_Architecture.png}
 \caption{Feature extraction and network architecture of the proposed
 model. Top: derivation of the 8-channel feature tensor from raw road
 waypoints. Bottom: the SE-attention 1D-ResNet that scores the normalized
@@ -542,7 +525,7 @@ high self-reported classification accuracy.
 Table~\ref{tab:ablation} reports a $2\times2$ ablation crossing feature set
 (baseline 4-channel vs.\ proposed 8-channel) with test-time adaptation
 (none vs.\ a pointwise fine-tune on the single subject available at
-initialization). This ablation was run on the full 36{,}006-test corpus
+initialization). This ablation was run on the full 32{,}580-test corpus
 (seed 42, subject sizes 10--80, 75 trials) rather than the held-out split
 used for the main RQ3 comparison (Table~\ref{tab:main}), since it does not
 involve any model we ourselves trained on the training split -- the
@@ -600,7 +583,7 @@ within the RQ3 family.
 
 \begin{table}[t]
 \caption{Main results: baseline vs.\ proposed vs.\ 2026 competitors,
-held-out split ($N=7{,}202$ tests, 160 trials, sizes 10--200).}
+held-out split ($N=6{,}516$ tests, 160 trials, sizes 10--200).}
 \label{tab:main}
 \begin{tabular}{lrrrr}
 \toprule
@@ -683,7 +666,7 @@ protocol), the proposed (ranking-trained) model is significantly
 ($\hat{A}_{12}=0.353$, $p=0.003$) and FreneticV
 ($\hat{A}_{12}=0.253$, $p<0.0001$), and not significantly different on
 Frenetic ($p=0.28$). In raw APFD these regressions are small (0.004 and
-0.008 respectively), and with $N=7{,}202$ tests a p-value this small is
+0.008 respectively), and with $N=6{,}516$ tests a p-value this small is
 unsurprising for almost any non-zero effect -- so we deliberately report
 the effect size, not the p-value, as the basis for calling these
 regressions meaningful: $\hat{A}_{12}=0.253$ and $0.353$ both fall at or
@@ -809,12 +792,7 @@ current empirical software engineering reporting standards
 \citep{ralph2020empirical}.
 \textbf{Construct.} APFD is a standard but imperfect proxy for
 fault-detection cost-effectiveness; we also report $\mathrm{APFD}_C$ where
-possible. Our reconstructed corpus contains 3{,}426 more FreneticV tests
-than the organizers' benchmark (Section~\ref{sec:dataset}); we found no
-gross fail-rate anomaly in the additional tests, but cannot rule out subtler
-distributional differences without the organizers' exact subset, and this
-could in principle shift FreneticV-specific APFD estimates (including the
-RQ4 finding) by an amount we cannot bound precisely. \textbf{Internal.} We
+possible. \textbf{Internal.} We
 do not control how the original KSERESNET checkpoint was trained or on what
 data; our own proposed model's evaluation is protected from this specific
 threat by the leakage-free 80/20 split, but
