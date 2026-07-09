@@ -858,9 +858,33 @@ trials per generator) show the proposed model losing a majority of
 individual trials to the intermediate model in Ambiegen and FreneticV, not
 because $p<0.05$ makes the difference notable on its own -- but we do not
 claim these regressions are large enough to change a practitioner's tool
-choice on their own. \textbf{External.} All experiments use a single dataset
-(SensoDat) and a single simulator; generalization to other SDC simulation
-platforms is untested. \textbf{Conclusion validity.} We apply
+choice on their own. \textbf{External.} All experiments use a single
+dataset (SensoDat) and a single simulator; we did not replicate any of
+RQ1--RQ4 on a second corpus, and this is a real limitation, not a merely
+disclosed one. We did not attempt a second corpus in this revision because
+a faithful replication is not a small addition: it requires a simulator
+producing comparable road-geometry test artifacts with ground-truth
+pass/fail outcomes (e.g., a BeamNG.tech-based generator
+\citep{papamichail2025scenario} or a CARLA-based scenario suite), a
+harness re-validated against that simulator's own published baselines the
+way we validated ours against \citet{aryan2026icst}'s Table~III
+(Section~\ref{sec:harness}), and a leakage-free retraining of both the
+baseline and proposed model on that corpus -- in effect, most of this
+paper's methodology repeated end to end. This is also why we frame RQ1's
+central finding at the level of a training-objective mismatch (pointwise
+loss optimized, ranking metric scored) rather than at the level of
+SensoDat-specific data properties: the mismatch follows from a
+general learning-to-rank argument \citep{burges2005learning} that does not
+reference SensoDat, which is why we expect it to recur elsewhere, but this
+is a theoretical argument for external validity, not an empirical one, and
+we do not present it as a substitute for a second-corpus replication. We
+single out RQ4 (the per-generator regression) as the finding least likely
+to generalize as stated, since it is defined in terms of SensoDat's three
+specific generators; a second corpus would show whether \emph{some}
+generator-level regression recurs, not whether these same three do.
+Cross-corpus replication is the most valuable single follow-up to this
+paper, and we leave it as future work rather than an in-scope contribution.
+\textbf{Conclusion validity.} We apply
 Holm--Bonferroni correction within each RQ's family of tests to mitigate
 multiple-comparison risk.
 
@@ -879,6 +903,9 @@ did not close the remaining gap further. Future work should pursue a full
 (not warm-started) retraining of the base model, address the
 generator-level regression directly, and, if competition infrastructure is
 extended to expose simulation cost, pursue genuinely cost-aware training.
+The single highest-priority follow-up, however, is replicating RQ1--RQ4 on
+a second SDC corpus and simulator (Section~\ref{sec:threats}), since every
+finding in this paper is currently established on SensoDat alone.
 
 \section*{Statements and Declarations}
 \textbf{Funding.} This work is supported by DIAL Grant, IBITF, IIT Bhilai,
@@ -888,7 +915,7 @@ DST, Govt. of India.
 \citep{birchler2024sensodat}. All code, trained model checkpoints, dataset
 splits, and the independent evaluation harness used in this paper are
 released at \url{https://github.com/VishalKumarSwain/kseresnet-v2-artifact}
-(archived on Zenodo: [DOI to be added once the archival release is cut]).
+(archived on Zenodo: \url{https://doi.org/10.5281/zenodo.21273306}).
 \label{sec:availability}
 
 \bibliographystyle{spbasic}
