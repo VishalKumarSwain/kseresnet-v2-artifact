@@ -52,8 +52,9 @@ the real, 32{,}580-test SensoDat corpus, validate it against the
 competition's own published results, and use it to run a sequence of
 controlled experiments: an ablation isolating feature engineering from
 model adaptation, an offline pairwise ranking-loss retraining on a
-leakage-free 80/20 split, and three follow-up robustness checks (extended
-training, generator-stratified sampling, a Transformer backbone) to test
+leakage-free 80/20 split, and four follow-up robustness checks (extended
+training, generator-stratified sampling, a Transformer backbone, a
+listwise ranking loss) to test
 alternative explanations for the remaining gap to the state of the art.
 \textbf{Results.} The original tool reported 95.27\% self-reported
 classification accuracy and a self-reported APFD of 0.8131; independent
@@ -67,8 +68,9 @@ $p=7.6\times10^{-28}$, $\hat{A}_{12}=0.997$), statistically exceeding one
 APFD. Two further findings qualify this result: the improvement is
 accompanied by small but statistically consistent generator-specific
 regressions (0.004-0.008 APFD) invisible in the aggregate metric, and
-three follow-up experiments testing plausible alternative explanations
-(more training, stratified sampling, a Transformer backbone) each produced
+four follow-up experiments testing plausible alternative explanations
+(more training, stratified sampling, a Transformer backbone, a listwise
+ranking loss) each produced
 a real, measurable decrease relative to the proposed model, not merely a
 null result.
 \textbf{Conclusions.} Classification accuracy is an unreliable indicator of
@@ -127,7 +129,7 @@ independently and validated against their published results
 isolate feature engineering from model adaptation, test whether an
 offline, ranking-aware training objective closes the gap to competition
 tools that do not suffer from this mismatch, and stress-test that result
-against three plausible alternative explanations. We also surface an
+against four plausible alternative explanations. We also surface an
 unexamined property of the standard evaluation practice in this space:
 aggregate APFD across mixed road-generator test suites can hide
 generator-specific performance regressions, a finding with implications
@@ -143,7 +145,7 @@ beyond this specific tool.
   the driver of prioritization effectiveness (RQ2).
 \item A ranking-aware retraining procedure that raises mean APFD from 0.625
   to 0.794 on a leakage-free held-out split, evaluated with non-parametric
-  significance tests and effect sizes (RQ3), together with three
+  significance tests and effect sizes (RQ3), together with four
   robustness checks that rule out simpler alternative explanations for the
   remaining gap to the state of the art.
 \item A finding that aggregate APFD improvement can mask small
@@ -220,7 +222,7 @@ paper is taken from the independent organizer evaluation
 \citep{aryan2026icst}, not from that paper's self-reported results -- the
 divergence between the two (Section~\ref{sec:rq1}) is itself part of this
 paper's motivation. The material beyond the original submission --
-the ablation (RQ2), the ranking-loss retraining and its three robustness
+the ablation (RQ2), the ranking-loss retraining and its four robustness
 checks (RQ3), the generator-level analysis (RQ4), the cross-edition
 comparison (RQ5), and the fully reproducible evaluation harness -- is new
 to this paper and was not part of the original tool submission.
@@ -279,7 +281,8 @@ KSERESNET (baseline) \citep{swain2026kseresnet} & Prioritization & SE-ResNet, po
 \item[RQ3 (Remedy).] Does an offline, ranking-aware training objective
   close the gap to state-of-the-art prioritization tools, and do simpler
   alternative explanations (more training, generator-stratified sampling,
-  a different architecture) account for the same improvement?
+  a different architecture, a different ranking objective) account for the
+  same improvement?
 \item[RQ4 (Aggregation).] Does an aggregate APFD improvement hold uniformly
   within each road generator, or can it mask subgroup-level regressions?
 \item[RQ5 (Transfer).] Do test-\emph{selection} tools from the prior
@@ -652,9 +655,9 @@ therefore treat their figures in Table~\ref{tab:main} as illustrative
 rather than as valid heads of a significance comparison. This is discussed
 further as a threat to validity in Section~\ref{sec:threats}.
 
-\subsubsection{Robustness checks: three alternative explanations, ruled out}
+\subsubsection{Robustness checks: four alternative explanations, ruled out}
 \label{sec:rq3-robustness}
-We tested three plausible alternative paths to closing the remaining gap
+We tested four plausible alternative paths to closing the remaining gap
 to RoadFury (Table~\ref{tab:design}), none of which improved on the main
 result. (i) \emph{More training} (40 vs.\ 15 epochs) produced a small but
 significant \emph{decrease} ($N=75$ trials, mean APFD $-0.0016$,
@@ -670,16 +673,29 @@ finding below. (iii) A \emph{Transformer encoder} backbone
 (pointwise pretrain, then ranking fine-tune) recipe on the same features,
 performed substantially \emph{worse} than the ResNet ($N=160$ trials,
 mean APFD 0.742 vs.\ 0.794, the ResNet wins 148 of 160 trials with 4
-losses and 8 ties; $\hat{A}_{12}=0.950$, $p<10^{-25}$) -- architecture
+losses and 8 ties; $\hat{A}_{12}=0.050$, $p<10^{-25}$) -- architecture
 family is not, on this budget, a lever toward closing the gap, even though
 the competition's best-performing tool (RoadFury) also uses a Transformer,
 which we attribute to differences in feature richness or training scale we
-did not have access to reproduce, not to the architecture per se.
+did not have access to reproduce, not to the architecture per se. (iv) A
+\emph{listwise} ranking loss (ListNet-style top-1 cross-entropy
+\citep{cao2007learning}, computed over randomly sampled 32-item lists
+rather than fail/pass pairs, same warm-start and training split as the
+proposed model) performed substantially \emph{worse} than the pairwise
+loss used in the proposed model ($N=160$ trials, mean APFD 0.772 vs.\
+0.794, the pairwise-trained model wins 136 of 160 trials with 7 losses
+and 17 ties; $\hat{A}_{12}=0.097$, $p=9.8\times10^{-23}$) -- for this
+architecture, feature set, and training budget, the pairwise objective is
+not merely a reasonable default but the better-performing of the two
+ranking formulations we tested.
 
 \begin{table}[t]
 \caption{Alternative design choices tested and not adopted. Unit of
 analysis is the trial (Section~\ref{sec:methodology}): $N=75$ trials for
-the epoch-count row, $N=160$ trials for the other two.}
+the epoch-count row, $N=160$ trials for the other three. $\hat{A}_{12}$ is
+$P(\text{alternative} > \text{proposed})$ throughout, matching the sign of
+the mean-difference column; values below 0.5 indicate the proposed model
+wins more often.}
 \label{tab:design}
 \begin{tabular}{p{2.7cm}p{3.0cm}p{1.3cm}p{2.3cm}}
 \toprule
@@ -687,7 +703,8 @@ Design choice & Result vs. proposed model & $\hat{A}_{12}$ & Decision \\
 \midrule
 More training epochs (40 vs. 15) & $-0.0016$ APFD, $p=0.0003$ & 0.373 & Not adopted -- mild overfitting \\
 Generator-stratified pair sampling & $-0.0004$ APFD, $p=0.11$ (n.s.) & 0.431 & Not adopted -- no effect \\
-Transformer backbone (same recipe) & $-0.052$ APFD, $p<10^{-25}$ & 0.950 & Not adopted -- underperforms ResNet \\
+Transformer backbone (same recipe) & $-0.052$ APFD, $p<10^{-25}$ & 0.050 & Not adopted -- underperforms ResNet \\
+Listwise ranking loss (ListNet-style, same recipe) & $-0.0214$ APFD, $p=9.8\times10^{-23}$ & 0.097 & Not adopted -- underperforms pairwise loss \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -722,7 +739,22 @@ failure rates, which the ranking loss appears to partly learn, but this
 does not correspond to uniformly better \emph{within}-generator ranking.
 The generator-stratified robustness check (Section~\ref{sec:rq3-robustness})
 shows this is not fixed by stratifying training pairs by generator, so the
-mechanism is not simply an artifact of pair-sampling imbalance. To our
+mechanism is not simply an artifact of pair-sampling imbalance. The
+listwise robustness check (Section~\ref{sec:rq3-robustness}) shows the
+pattern is not specific to the pairwise loss either, but it is not
+identical under a different objective: relative to the same intermediate
+model, the listwise-trained model ($N=75$ trials per generator) regresses
+significantly on Frenetic (loses 46 of 75, wins 28, ties 1;
+$\hat{A}_{12}=0.380$, $p=0.005$) and FreneticV (loses 50 of 75, wins 22,
+ties 3; $\hat{A}_{12}=0.313$, $p<0.001$), but \emph{not} on Ambiegen (loses
+45 of 75, wins 29, ties 1; $p=0.15$, n.s.) -- the reverse of the pairwise
+model's pattern, which regresses on Ambiegen and FreneticV but not
+Frenetic. Some generator-level regression recurs under both ranking
+objectives, but which generator it appears on is not stable across them,
+which argues against a single fixed root cause (e.g., one generator's
+roads being intrinsically harder to rank) and toward each objective
+learning a somewhat different, imperfect approximation of the true
+ranking. To our
 knowledge, no prior evaluation of ML-based SDC test prioritizers reports a
 per-generator breakdown; aggregate APFD alone would not have surfaced this.
 
@@ -841,6 +873,12 @@ independently measured," not "what we can vouch for the training
 process of." Our CPU-only training budget may understate what a
 Transformer backbone (Section~\ref{sec:rq3-robustness}) could achieve with
 more compute; we report this as a bounded, not universal, negative result.
+Similarly, our listwise check (Section~\ref{sec:rq3-robustness}) tests one
+specific formulation (ListNet-style top-1 cross-entropy over 32-item
+lists) and does not rule out that a different listwise loss, list size, or
+training budget (e.g., LambdaRank's NDCG-weighted gradients) could close
+the gap to the pairwise loss; we report the negative result for the
+formulation we tested, not for listwise objectives in general.
 A more consequential internal threat is \emph{survivorship bias} in the
 ITEP4SDC and EagleSemble comparisons: both succeed on only 31\% of trials,
 and their successes are concentrated at smaller, easier subject sizes
@@ -901,8 +939,8 @@ retraining closes the gap to the state of the art from 0.18 to 0.009 APFD)
 without discarding the underlying architecture. This repair is not,
 however, complete or uniform: two of three generators show a small but
 statistically consistent regression under a per-generator breakdown, and
-three plausible follow-up improvements (more training, stratified
-sampling, a Transformer backbone)
+four plausible follow-up improvements (more training, stratified
+sampling, a Transformer backbone, a listwise ranking loss)
 did not close the remaining gap further. Future work should pursue a full
 (not warm-started) retraining of the base model, address the
 generator-level regression directly, and, if competition infrastructure is

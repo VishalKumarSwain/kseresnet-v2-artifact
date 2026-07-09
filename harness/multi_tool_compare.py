@@ -43,6 +43,7 @@ TOOLS = [
     {"name": "KSERESNET-V4B",     "image": "kseresnet-v4b:latest",     "interface": "prioritize", "extra_args": []},
     {"name": "KSERESNET-V5",      "image": "kseresnet-v5:latest",      "interface": "prioritize", "extra_args": []},
     {"name": "KSERESNET-V6",      "image": "kseresnet-v6:latest",      "interface": "prioritize", "extra_args": []},
+    {"name": "KSERESNET-V7",      "image": "kseresnet-v7:latest",      "interface": "prioritize", "extra_args": []},
     # 2025 edition -- test *selection* tools, converted to a full ordering (selected first, rest appended)
     {"name": "CertiFail",          "image": "certifail-2025:latest",           "interface": "select", "extra_args": ["-p", "50051"]},
     {"name": "Detour",             "image": "detour-2025:latest",              "interface": "select", "extra_args": ["-p", "50051"]},
