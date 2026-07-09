@@ -45,8 +45,12 @@ classification objective (pass/fail) but evaluated with a ranking metric,
 Average Percentage of Fault Detection (APFD). Whether this objective
 mismatch has a measurable effect on real tools is untested.
 \textbf{Objective.} We diagnose this mismatch in KSERESNET, a submission to
-the ICST 2026 SDC Testing Tool Competition, and evaluate whether it can be
-repaired without discarding the tool's existing architecture.
+the ICST 2026 SDC Testing Tool Competition. Our contribution is the
+diagnosis and its empirical scale, not a new technique: we use a standard,
+off-the-shelf pairwise ranking loss as a diagnostic instrument, testing
+whether closing the training/evaluation objective mismatch -- with no
+novel method and no architecture change -- is sufficient to close most of
+the tool's performance gap.
 \textbf{Method.} We reconstruct the organizers' evaluation protocol against
 the real, 32{,}580-test SensoDat corpus, validate it against the
 competition's own published results, and use it to run a sequence of
@@ -122,8 +126,13 @@ latter, particularly when trained with a pointwise loss
 
 This paper treats that discrepancy as a research object rather than a
 one-off embarrassment. We ask: how large is this effect, what causes it,
-and can it be fixed without abandoning the tool's existing architecture and
-features? Using the organizers' own evaluation protocol -- reconstructed
+and does closing it require a new technique, or does a correctly targeted
+standard one suffice? We deliberately choose the latter as a diagnostic
+strategy: if a well-established, off-the-shelf pairwise ranking loss
+\citep{burges2005learning} closes most of the gap without any change to
+the model's architecture or features, that is evidence for the diagnosis
+itself, not a contribution to learning-to-rank methodology. Using the
+organizers' own evaluation protocol -- reconstructed
 independently and validated against their published results
 (Section~\ref{sec:methodology}) -- we run a sequence of experiments that
 isolate feature engineering from model adaptation, test whether an
@@ -143,11 +152,13 @@ beyond this specific tool.
   independently validated against the organizers' published results.
 \item An ablation isolating feature engineering from model adaptation as
   the driver of prioritization effectiveness (RQ2).
-\item A ranking-aware retraining procedure that raises mean APFD from 0.625
-  to 0.794 on a leakage-free held-out split, evaluated with non-parametric
-  significance tests and effect sizes (RQ3), together with four
-  robustness checks that rule out simpler alternative explanations for the
-  remaining gap to the state of the art.
+\item An empirical demonstration, using a standard pairwise ranking loss
+  \citep{burges2005learning} rather than a new method, that closing the
+  training/evaluation objective mismatch raises mean APFD from 0.625
+  to 0.794 on a leakage-free held-out split (RQ3), evaluated with
+  non-parametric significance tests and effect sizes, together with four
+  robustness checks (including a listwise alternative) that rule out
+  simpler explanations for the remaining gap to the state of the art.
 \item A finding that aggregate APFD improvement can mask small
   (0.004--0.008 APFD) but statistically consistent road-generator-level
   regressions (RQ4), not previously examined in this line of work.
@@ -243,6 +254,13 @@ competition tool -- including the baseline studied here -- is trained with
 a pointwise objective (Table~\ref{tab:ablation}) yet evaluated with a
 ranking metric (APFD). Section~\ref{sec:rq1} shows this mismatch produces a
 large, measurable effect in this setting, not merely a theoretical concern.
+We do not propose a new ranking-loss formulation or architecture: the
+pairwise loss we use in RQ3 (Section~\ref{sec:proposed}) is the standard
+formulation from \citet{burges2005learning}, applied unmodified. The
+contribution is diagnostic -- showing that this well-known
+technique-diagnosis mismatch is present, large, and measurable in a
+concrete class of deployed SDC tools, not previously documented for this
+domain -- rather than methodological.
 
 \subsection{Architecture Background}
 The baseline model's backbone follows the residual-connection design of
@@ -986,9 +1004,13 @@ Classification accuracy is not a reliable proxy for prioritization
 effectiveness in ML-based SDC test prioritization: 95.27\% self-reported
 accuracy corresponded to an independently measured mean APFD of only 0.625,
 just 0.11 above a random ordering. This effect is diagnosable (a pointwise
-training objective) and substantially repairable (a ranking-aware
-retraining closes the gap to the state of the art from 0.18 to 0.009 APFD)
-without discarding the underlying architecture. This repair is not,
+training objective) and, using nothing more than a standard, off-the-shelf
+pairwise ranking loss \citep{burges2005learning} rather than a new
+technique, substantially repairable (retraining with it closes the gap to
+the state of the art from 0.18 to 0.009 APFD) without discarding the
+underlying architecture -- evidence for the diagnosis, since a
+well-targeted standard remedy would not be expected to work this well if
+the underlying problem were something else. This repair is not,
 however, complete or uniform: two of three generators show a small but
 statistically consistent regression under a per-generator breakdown, and
 four plausible follow-up improvements (more training, stratified
