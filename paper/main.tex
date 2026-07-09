@@ -673,13 +673,13 @@ did not have access to reproduce, not to the architecture per se.
 analysis is the trial (Section~\ref{sec:methodology}): $N=75$ trials for
 the epoch-count row, $N=160$ trials for the other two.}
 \label{tab:design}
-\begin{tabular}{p{3.6cm}p{3.6cm}p{3.6cm}}
+\begin{tabular}{p{2.7cm}p{3.0cm}p{1.3cm}p{2.3cm}}
 \toprule
-Design choice & Result vs. proposed model & Decision \\
+Design choice & Result vs. proposed model & $\hat{A}_{12}$ & Decision \\
 \midrule
-More training epochs (40 vs. 15) & $-0.0016$ APFD, $p=0.0003$ & Not adopted -- mild overfitting \\
-Generator-stratified pair sampling & $-0.0004$ APFD, $p=0.11$ (n.s.) & Not adopted -- no effect \\
-Transformer backbone (same recipe) & $-0.052$ APFD, $p<10^{-25}$ & Not adopted -- underperforms ResNet \\
+More training epochs (40 vs. 15) & $-0.0016$ APFD, $p=0.0003$ & 0.373 & Not adopted -- mild overfitting \\
+Generator-stratified pair sampling & $-0.0004$ APFD, $p=0.11$ (n.s.) & 0.431 & Not adopted -- no effect \\
+Transformer backbone (same recipe) & $-0.052$ APFD, $p<10^{-25}$ & 0.950 & Not adopted -- underperforms ResNet \\
 \bottomrule
 \end{tabular}
 \end{table}
