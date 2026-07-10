@@ -691,7 +691,12 @@ would weigh.
 \begin{table}[t]
 \caption{Main results: baseline vs.\ proposed vs.\ 2026 competitors,
 held-out split (drawn from a pool of 6{,}516 held-out tests; statistical
-tests below use $N=160$ trials, subject sizes 10--200).}
+tests below use $N=160$ trials, subject sizes 10--200). $^\dagger$APFD for
+these two tools is averaged over only the 31\% of trials they completed,
+concentrated at easier, smaller subject sizes (Section~\ref{sec:rq3}); it
+is \emph{not} comparable to the other rows, which are averaged over all
+160 trials including the hardest, and is reported for context only, not
+as a validated head-to-head figure.}
 \label{tab:main}
 \begin{tabular}{lrrrr}
 \toprule
@@ -699,9 +704,9 @@ Tool & APFD & $\mathrm{APFD}_C$ & Prioritization time (s) & Success rate \\
 \midrule
 RoadFury \citep{tran2026roadfury} & 0.803 & 0.861 & 0.804 & 100\% \\
 \textbf{Proposed (this paper)} & \textbf{0.794} & \textbf{0.855} & 0.370 & \textbf{100\%} \\
-ITEP4SDC \citep{gullu2026itep4sdc} & 0.788 & 0.857 & 0.184 & 31\% \\
+ITEP4SDC$^\dagger$ \citep{gullu2026itep4sdc} & 0.788 & 0.857 & 0.184 & \textbf{31\%} \\
 RTE4SDC \citep{maugeri2026rte4sdc} & 0.779 & 0.836 & 0.244 & 100\% \\
-EagleSemble \citep{aquilinoeaglesemble} & 0.777 & 0.851 & 0.477 & 31\% \\
+EagleSemble$^\dagger$ \citep{aquilinoeaglesemble} & 0.777 & 0.851 & 0.477 & \textbf{31\%} \\
 KSERESNET baseline \citep{swain2026kseresnet} & 0.625 & 0.668 & 0.180 & 100\% \\
 Random & 0.513 & 0.549 & 0.079 & 100\% \\
 \bottomrule
