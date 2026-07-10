@@ -1154,7 +1154,14 @@ a second SDC corpus and simulator (Section~\ref{sec:threats}), since every
 SDC-specific finding in this paper is established on SensoDat alone; a
 lightweight, non-SDC toy check (Section~\ref{sec:threats}) supports the
 generality of the underlying accuracy/ranking mechanism but is not a
-substitute for that replication.
+substitute for that replication. A further direction is integrating a
+generative adversarial network (GAN) into the pipeline as a test
+\emph{generator} targeting the ranking blind spots RQ4 identifies --
+producing new road scenarios adversarially selected to be
+hard-to-rank for the current model, rather than relying only on the
+existing test generators' outputs. This is a generation-side extension,
+complementary to the prioritization-side contribution of this paper
+rather than a modification of it.
 
 \section*{Statements and Declarations}
 \textbf{Funding.} This work is supported by DIAL Grant, IBITF, IIT Bhilai,
