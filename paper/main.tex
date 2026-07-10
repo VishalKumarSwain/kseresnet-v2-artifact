@@ -45,7 +45,11 @@ classification objective (pass/fail) but evaluated with a ranking metric,
 Average Percentage of Fault Detection (APFD). Whether this objective
 mismatch has a measurable effect on real tools is untested.
 \textbf{Objective.} We diagnose this mismatch in KSERESNET, a submission to
-the ICST 2026 SDC Testing Tool Competition. Our contribution is the
+the ICST 2026 SDC Testing Tool Competition and \emph{the authors' own
+prior work}: this paper is a deliberately self-critical replication and
+extension of our own submission, not a promotional one, and we evaluate
+it exclusively under the organizers' independent protocol rather than our
+own self-reported results throughout. Our contribution is the
 diagnosis and its empirical scale, not a new technique: we use a standard,
 off-the-shelf pairwise ranking loss as a diagnostic instrument, testing
 whether closing the training/evaluation objective mismatch -- with no
@@ -104,7 +108,15 @@ The ICST/SBFT SDC Testing Tool Competition
 problem. In its 2026 edition, four machine-learned tools were submitted for
 the prioritization task, scored by Average Percentage of Fault Detection
 (APFD) on the SensoDat corpus \citep{birchler2024sensodat}. One of these
-tools, KSERESNET \citep{swain2026kseresnet}, reported 95.27\% classification
+tools, KSERESNET \citep{swain2026kseresnet}, is the authors' own
+competition submission; we state this plainly here, at the outset, rather
+than later, because it is the reason this paper exists in its present
+form. This paper is a self-critical replication and extension of that
+submission, not a promotional one: we hold KSERESNET to the same
+independent-evaluation standard as every competing tool throughout
+(Section~\ref{sec:methodology}), and its self-reported figures below are
+reported only to be immediately superseded by the organizers' independent
+measurement. KSERESNET reported 95.27\% classification
 accuracy and a self-reported APFD of 0.8131 in its own evaluation. The
 organizers' independent evaluation, however, measured a mean APFD of only
 0.625 \citep{aryan2026icst} -- barely better than a random ordering (0.513)
