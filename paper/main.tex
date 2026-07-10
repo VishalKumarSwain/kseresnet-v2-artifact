@@ -144,7 +144,41 @@ standard one suffice? We deliberately choose the latter as a diagnostic
 strategy: if a well-established, off-the-shelf pairwise ranking loss
 \citep{burges2005learning} closes most of the gap without any change to
 the model's architecture or features, that is evidence for the diagnosis
-itself, not a contribution to learning-to-rank methodology. Using the
+itself, not a contribution to learning-to-rank methodology.
+
+This framing raises a question we address directly rather than leave
+implicit: is a diagnosis, plus the application of a two-decade-old
+ranking-loss technique, sufficient contribution for a journal-length
+empirical study? We argue yes, on three grounds this paper substantiates
+rather than merely asserts. First, empirical standards for the field
+explicitly recognize diagnostic and replication studies as a distinct,
+legitimate contribution type with their own evaluation criteria -- rigor
+and evidentiary strength, not technical novelty -- rather than a lesser
+substitute for a new-method paper \citep{ralph2020empirical}; the
+standard we hold ourselves to throughout (Section~\ref{sec:methodology})
+is the former. Second, precedent in adjacent ML-systems research argues
+that measurement and diagnostic work on widely deployed but
+under-scrutinized techniques is frequently more consequential than
+incremental methodological novelty, precisely because such techniques are
+already in production and their failure modes are not
+\citep{sculley2015hidden}; a pointwise/ranking objective mismatch that
+recurs across every submitted competition tool (Table~\ref{tab:ablation})
+is exactly this kind of already-deployed, previously unscrutinized
+failure mode. Third, and most concretely, this paper's contribution is
+not exhausted by ``diagnosis plus standard fix'': RQ4 reports a masking
+effect -- aggregate improvement obscuring generator-level regressions --
+that is, to our knowledge, new to the SDC test-prioritization literature
+and is not implied by either the diagnosis or the fix in isolation; the
+four robustness checks (Section~\ref{sec:rq3-robustness}) are themselves
+negative results that rule out simpler explanations, independent of
+whether the fix itself is novel; and the cross-edition comparison (RQ5)
+and fully reproducible harness are contributions a purely
+technique-focused paper would have no reason to make. We treat the
+diagnosis, its empirical scale, and these follow-on findings collectively
+as the contribution, with the pairwise loss serving throughout as the
+diagnostic instrument rather than as the result being claimed.
+
+Using the
 organizers' own evaluation protocol -- reconstructed
 independently and validated against their published results
 (Section~\ref{sec:methodology}) -- we run a sequence of experiments that
