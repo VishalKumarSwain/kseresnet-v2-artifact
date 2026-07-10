@@ -123,8 +123,9 @@ organizers' independent evaluation, however, measured a mean APFD of only
 and far behind the eventual winner (0.803). This paper's motivation is
 therefore twofold. First, there is a large gap \emph{on the same metric}
 between the self-reported and independently measured APFD (0.8131 vs.\
-0.625), which we do not attempt to explain (we did not have access to the
-original submission's training procedure or evaluation code) but which
+0.625). As the original submission's authors, we checked our own
+development artifacts for the cause rather than leaving it unexplained
+(Section~\ref{sec:rq1} gives the details); the explanation we found
 motivates evaluating exclusively under an independently reproduced protocol
 throughout this paper (Section~\ref{sec:methodology}). Second, and the
 focus of this paper's empirical work, is a conceptual mismatch: \emph{a
@@ -571,10 +572,24 @@ self-reported APFD of 0.8131 and a self-reported classification accuracy of
 95.27\%. Two distinct gaps are visible here, and it is important not to
 conflate them. The first is between the self-reported and independently
 measured APFD (0.8131 vs.\ 0.625) -- the \emph{same} metric, measured two
-different ways, which we do not diagnose further since we lack access to
-the original evaluation code, but which is why every other number in this
-paper is drawn exclusively from independently reproduced evaluations
-(Section~\ref{sec:harness}). The second, and the one this paper diagnoses
+different ways. Because we are the original submission's authors, we
+checked our own development artifacts for the cause rather than treating
+it as unexplained. We found three concrete, non-speculative differences
+between the original self-evaluation and the organizers' protocol, any one
+of which would inflate a self-reported figure: (i) the self-evaluation
+script we used scored the model on the exact same 956-test file the model
+was trained on, with no held-out split at all -- direct train/evaluation
+leakage; (ii) it computed a single APFD over that entire fixed set in one
+pass, not the organizers' repeated-trial, random-subject-sampling protocol
+(Section~\ref{sec:harness}); and (iii) that 956-test file is a small local
+development sample bundled with the competition repository, not the
+32{,}580-test corpus the organizers use for official scoring. We do not
+disentangle the individual contribution of each factor -- doing so would
+require retraining under each condition in isolation, which is outside
+this paper's scope -- but we no longer treat the gap as unexplained, and
+it is why every other number in this paper is drawn exclusively from
+independently reproduced evaluations (Section~\ref{sec:harness}). The
+second, and the one this paper diagnoses
 in depth, is between classification accuracy and \emph{any} APFD figure:
 even taking the self-reported 0.8131 at face value, 95.27\% accuracy does
 not imply near-ceiling ranking performance, and under the independently
