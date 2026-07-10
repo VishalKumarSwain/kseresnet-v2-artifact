@@ -1040,9 +1040,29 @@ loss optimized, ranking metric scored) rather than at the level of
 SensoDat-specific data properties: the mismatch follows from a
 general learning-to-rank argument \citep{burges2005learning} that does not
 reference SensoDat, which is why we expect it to recur elsewhere, but this
-is a theoretical argument for external validity, not an empirical one, and
-we do not present it as a substitute for a second-corpus replication. We
-single out RQ4 (the per-generator regression) as the finding least likely
+is, on its own, a theoretical argument for external validity, not an
+empirical one. We supplement it with a lightweight empirical check rather
+than leaving it purely theoretical: using the identical two-phase recipe
+(pointwise pretrain, then pairwise ranking-loss fine-tune,
+Section~\ref{sec:proposed}) on an unrelated, non-SDC, synthetic binary
+classification dataset (4{,}000 samples, 20 features, no relation to
+roads, simulators, or SensoDat), with a small MLP in place of the
+SE-ResNet (architecture is incidental to the mechanism under test), the
+same qualitative pattern recurs: held-out classification accuracy is
+essentially unchanged by the switch (0.806 vs.\ 0.807), while a
+trial-sampled, APFD-computed ranking metric improves consistently across
+every one of 6 random seeds we tried ($\hat{A}_{12}$ ranging 0.534--0.691,
+$N=160$ trials per seed, $p<0.05$ in 5 of 6 seeds). The magnitude is
+small -- consistent with this paper's own isolated, same-features
+training-objective effect (RQ2: 0.759 to 0.794, Table~\ref{tab:ablation})
+rather than the much larger full-pipeline gain, most of which RQ2
+attributes to features, not the training objective -- and this toy check
+is not a substitute for a second SDC corpus: it has no road geometry, no
+simulator, and cannot speak to RQ4's generator-specific finding at all.
+It is, however, real, non-cherry-picked evidence (we report all 6 seeds
+we ran, not a selected subset) that the accuracy/ranking decoupling this
+paper diagnoses is not an artifact specific to SensoDat or to SDC
+trajectory features. We single out RQ4 (the per-generator regression) as the finding least likely
 to generalize as stated, since it is defined in terms of SensoDat's three
 specific generators; a second corpus would show whether \emph{some}
 generator-level regression recurs, not whether these same three do.
@@ -1074,7 +1094,10 @@ generator-level regression directly, and, if competition infrastructure is
 extended to expose simulation cost, pursue genuinely cost-aware training.
 The single highest-priority follow-up, however, is replicating RQ1--RQ4 on
 a second SDC corpus and simulator (Section~\ref{sec:threats}), since every
-finding in this paper is currently established on SensoDat alone.
+SDC-specific finding in this paper is established on SensoDat alone; a
+lightweight, non-SDC toy check (Section~\ref{sec:threats}) supports the
+generality of the underlying accuracy/ranking mechanism but is not a
+substitute for that replication.
 
 \section*{Statements and Declarations}
 \textbf{Funding.} This work is supported by DIAL Grant, IBITF, IIT Bhilai,
